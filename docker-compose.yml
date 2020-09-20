@@ -1,0 +1,20 @@
+version: "3.8"
+#volumes:
+#    mongo_data:
+#    mongo_config:
+services:
+#    swagger_mongo: 
+#        container_name: mongo
+#        image: mongo
+#        ports: 
+#            - '27017:27017'
+#        volumes:
+#            - mongo_data:/data/db
+#            - mongo_config:/data/configdb
+    swagger_app:
+        container_name: swagger_app
+        image: swagger_app_img:swagger
+        restart: always
+        ports:
+        - '8080:8080'
+        build: .

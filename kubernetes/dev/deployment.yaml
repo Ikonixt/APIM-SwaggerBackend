@@ -1,0 +1,51 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: multiple-domain-swagger-api-deployment
+  labels:
+    app: multiple-domain-swagger-api
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 1
+      maxSurge: 3
+  selector:
+    matchLabels:
+      app: multiple-domain-swagger-api
+  template:
+    metadata:
+      labels:
+        app: multiple-domain-swagger-api
+    spec:
+      containers:
+        - name: multiple-domain-swagger-api
+          image: infrastructure/api_multiple_domain_swagger
+          imagePullPolicy: Always
+          env:
+            - name: MONGODB_URI
+              value: "mongodb://10.100.60.216:32017/bizapp"
+            - name: DOMAIN
+              value: "http://127.0.0.1:8080"
+            - name: SERVER_PORT
+              value: "8080"
+            - name: NODE_TLS_REJECT_UNAUTHORIZED
+              value: "0"
+          ports:
+            - containerPort: 8080
+          resources:
+            limits:
+              cpu: 500m
+              memory: 1024Mi
+            requests:
+              cpu: 10m
+              memory: 265Mi
+          livenessProbe:
+            httpGet:
+              path: /_swagger/health
+              port: 8080
+            initialDelaySeconds: 5
+            failureThreshold: 2
+            periodSeconds: 5
+

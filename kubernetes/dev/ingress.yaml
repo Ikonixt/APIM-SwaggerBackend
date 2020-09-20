@@ -1,0 +1,20 @@
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-multiple-domain-swagger-api
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+spec:
+  tls:
+    - hosts:
+      - uat.10.100.60.217.nip.io
+      secretName: tls-uat.10.100.60.217.nip.io
+  rules:
+  - host: uat.10.100.60.217.nip.io
+    http:
+      paths:
+      - path: /SwaggerAPI(/|$)(.*)
+        backend:
+          serviceName: multiple-domain-swagger-api-service
+          servicePort: 8080
+
